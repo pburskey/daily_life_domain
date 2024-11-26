@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TaskInProgressTest {
 
-    StatusStateMachine machine = null;
+
     private Map<Status, Status[]> progressionConfiguration;
     private Status startState;
     private Status endState;
@@ -34,25 +34,23 @@ class TaskInProgressTest {
         this.endState = new SimpleStatus("finish");
         progressionConfiguration.put(this.startState, new Status[]{this.endState});
         progressionConfiguration.put(this.endState, null);
-
-        machine = new SimpleStateMachine(this.progressionConfiguration, this.startState, this.endState, this.taskID);
-
+        task.setStatusStateMachine(new SimpleStateMachine(this.progressionConfiguration, this.startState, this.endState));
     }
 
     @org.junit.jupiter.api.Test
     void simpleTaskInProgress() {
 
         assertNotNull(this.task);
-        assertNotNull(this.machine);
-        TaskInProgress tip = this.machine.start();
+        assertNotNull(this.task.getStatusStateMachine());
+        TaskInProgress tip = this.task.start();
         assertNotNull(tip);
     }
 
     @org.junit.jupiter.api.Test
     void simpleTaskInProgress_statuses_start() {
 
-        assertNotNull(this.machine);
-        Status[] statuses = (this.machine.available(null));
+        assertNotNull(this.task.getStatusStateMachine());
+        Status[] statuses = (this.task.getStatusStateMachine().available(null));
         assertNotNull(statuses);
         assertEquals(1, statuses.length);
     }
@@ -61,8 +59,8 @@ class TaskInProgressTest {
     @org.junit.jupiter.api.Test
     void simpleTaskInProgress_statuses_start2() {
 
-        assertNotNull(this.machine);
-        Status[] statuses = (this.machine.available(this.startState));
+        assertNotNull(this.task.getStatusStateMachine());
+        Status[] statuses = (this.task.getStatusStateMachine().available(this.startState));
         assertNotNull(statuses);
         assertEquals(1, statuses.length);
     }
@@ -71,20 +69,20 @@ class TaskInProgressTest {
     @org.junit.jupiter.api.Test
     void simpleTaskInProgress_statuses_end() {
 
-        assertNotNull(this.machine);
-        Status[] statuses = (this.machine.available(this.endState));
+        assertNotNull(this.task.getStatusStateMachine());
+        Status[] statuses = (this.task.getStatusStateMachine().available(this.endState));
         assertNull(statuses);
     }
 
     @org.junit.jupiter.api.Test
     void progression_1() {
 
-        assertNotNull(this.machine);
-        TaskInProgress tip = this.machine.start();
+        assertNotNull(this.task.getStatusStateMachine());
+        TaskInProgress tip = this.task.start();
         assertNotNull(tip);
         assertNotNull(tip.getCreationDateTime());
         assertNotNull(tip.getStatus());
-        assertEquals(tip.getStatus().getStatus(), this.machine.startState());
+        assertEquals(tip.getStatus().getStatus(), this.task.getStatusStateMachine().startState());
 
     }
 
@@ -92,10 +90,10 @@ class TaskInProgressTest {
     @org.junit.jupiter.api.Test
     void progression_2() {
 
-        assertNotNull(this.machine);
-        TaskInProgress tip = this.machine.start();
-        Status[] statuses = this.machine.available(tip.getStatus().getStatus());
-        tip = this.machine.changeTo(null,statuses[0]);
+        assertNotNull(this.task.getStatusStateMachine());
+        TaskInProgress tip = this.task.start();
+        Status[] statuses = this.task.getStatusStateMachine().available(tip.getStatus().getStatus());
+        tip = this.task.changeTo(null,statuses[0]);
         assertNull(tip);
 
     }
@@ -103,10 +101,10 @@ class TaskInProgressTest {
     @org.junit.jupiter.api.Test
     void progression_4() {
 
-        assertNotNull(this.machine);
-        TaskInProgress tip = this.machine.start();
+        assertNotNull(this.task.getStatusStateMachine());
+        TaskInProgress tip = this.task.start();
         Status status = new SimpleStatus("status");
-        tip = this.machine.changeTo(tip, status);
+        tip = this.task.changeTo(tip, status);
         assertNull(tip);
 
     }
@@ -116,11 +114,11 @@ class TaskInProgressTest {
     @org.junit.jupiter.api.Test
     void progression_3() {
 
-        assertNotNull(this.machine);
-        TaskInProgress tip = this.machine.start();
-        Status[] statuses = this.machine.available(tip.getStatus().getStatus());
-        tip = this.machine.changeTo(tip,statuses[0]);
-        assertEquals(tip.getStatus().getStatus(), this.machine.endState());
+        assertNotNull(this.task.getStatusStateMachine());
+        TaskInProgress tip = this.task.start();
+        Status[] statuses = this.task.getStatusStateMachine().available(tip.getStatus().getStatus());
+        tip = this.task.changeTo(tip,statuses[0]);
+        assertEquals(tip.getStatus().getStatus(), this.task.getStatusStateMachine().endState());
 
     }
 

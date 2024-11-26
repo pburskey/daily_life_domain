@@ -4,14 +4,12 @@ import java.util.Date;
 
 public class SimpleStatusPoint implements StatusPoint {
     private Status status;
-    private String taskInProgressID;
     private Date dateTime;
 
 
 
-    public SimpleStatusPoint(Status status, String ataskInProgressID, Date dateTime) {
+    public SimpleStatusPoint(Status status, Date dateTime) {
         this.status = status;
-        this.taskInProgressID = ataskInProgressID;
         this.dateTime = dateTime;
     }
 
@@ -24,13 +22,6 @@ public class SimpleStatusPoint implements StatusPoint {
         this.status = status;
     }
 
-    public String getTaskInProgressID() {
-        return taskInProgressID;
-    }
-
-    public void setTaskInProgressID(String taskInProgressID) {
-        this.taskInProgressID = taskInProgressID;
-    }
 
     @Override
     public Date getDateTime() {

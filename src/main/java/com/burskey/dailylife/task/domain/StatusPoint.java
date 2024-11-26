@@ -5,7 +5,5 @@ import java.util.Date;
 public interface StatusPoint {
     Status getStatus();
 
-    String getTaskInProgressID();
-
     Date getDateTime();
 }

@@ -1,13 +1,13 @@
 package com.burskey.dailylife.task.service;
 
 import com.burskey.dailylife.party.service.PartyService;
-import com.burskey.dailylife.task.domain.SimpleTask;
-import com.burskey.dailylife.task.domain.Task;
+import com.burskey.dailylife.task.domain.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.Date;
+import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -28,6 +28,16 @@ class TaskServiceImplTest {
         task.setDescription("description");
         task.setTitle("title");
         task.setCreationDate(new Date());
+
+        HashMap map = new HashMap<Status, Status[]>();
+        Status start = new SimpleStatus("start");
+        Status end = new SimpleStatus("finish");
+        map.put(start, new Status[]{end});
+        map.put(end, null);
+
+        task.setStatusStateMachine(new SimpleStateMachine(map, start, end));
+
+
     }
 
     @Test
@@ -38,9 +48,9 @@ class TaskServiceImplTest {
     @Test
     void getTask() {
         assertNotNull(this.task);
-        when(this.dao.getTask(anyString())).thenReturn(task);
+        when(this.dao.getTask(anyString(), anyString())).thenReturn(task);
 
-        Task aTask = this.service.getTask("1");
+        Task aTask = this.service.getTask("2","1");
         assertNotNull(aTask);
         assertEquals(task.getId(), aTask.getId());
 

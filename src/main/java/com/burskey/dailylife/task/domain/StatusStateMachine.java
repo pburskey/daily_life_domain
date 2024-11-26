@@ -8,11 +8,9 @@ public interface StatusStateMachine {
     public Status startState();
     public Status endState();
 
-    public String getTaskID();
 
-    public TaskInProgress start();
 
     public Status[] available(Status status);
 
-    public TaskInProgress changeTo(TaskInProgress task, Status status);
+
 }
