@@ -43,13 +43,13 @@ public class TaskServiceImpl implements TaskService {
         }
 
 
-        {
-            Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-            Set<ConstraintViolation<StatusStateMachine>> violations = validator.validate(task.getStatusStateMachine());
-            if (!violations.isEmpty()) {
-                throw new ConstraintViolationException(violations);
-            }
-        }
+//        {
+//            Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+//            Set<ConstraintViolation<>> violations = validator.validate(task.getStatusStateMachine());
+//            if (!violations.isEmpty()) {
+//                throw new ConstraintViolationException(violations);
+//            }
+//        }
 
 
         return this.getService().saveTask(task);

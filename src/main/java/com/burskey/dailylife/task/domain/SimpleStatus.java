@@ -5,8 +5,16 @@ import java.util.UUID;
 public class SimpleStatus implements Status{
     private String id;
     private String description;
-
+    private String type = "simple";
     public SimpleStatus() {
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public SimpleStatus(String description) {
@@ -26,5 +34,14 @@ public class SimpleStatus implements Status{
 
     public String getDescription() {
         return description;
+    }
+
+    @Override
+    public String getType() {
+        return this.type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

@@ -1,6 +1,7 @@
 package com.burskey.dailylife.task.domain;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.Date;
 
@@ -11,10 +12,10 @@ public class SimpleTaskInProgress implements TaskInProgress {
     @NotBlank(message = "Please provide a task id")
     private String taskID;
 
-    @NotBlank(message = "Please provide a creation date and time")
+    @NotNull(message = "Please provide a creation date and time")
     private Date creationDateTime;
 
-    @NotBlank(message = "Please provide a status")
+    @NotNull(message = "Please provide a status")
     private StatusPoint status;
 
 

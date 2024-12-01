@@ -1,10 +1,8 @@
 package com.burskey.dailylife.task.domain;
 
-import com.burskey.dailylife.party.service.ServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.util.Date;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,9 +11,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class TaskInProgressTest {
 
 
-    private Map<Status, Status[]> progressionConfiguration;
-    private Status startState;
-    private Status endState;
+    private Map<String, String[]> progressionConfiguration;
+    private SimpleStatus startState;
+    private SimpleStatus endState;
     private String taskID;
 
     SimpleTask task = null;
@@ -29,12 +27,15 @@ class TaskInProgressTest {
         task.setId(this.taskID);
 
 
-        this.progressionConfiguration = new HashMap<Status, Status[]>();
+        this.progressionConfiguration = new HashMap<String, String[]>();
         this.startState = new SimpleStatus("start");
         this.endState = new SimpleStatus("finish");
-        progressionConfiguration.put(this.startState, new Status[]{this.endState});
-        progressionConfiguration.put(this.endState, null);
-        task.setStatusStateMachine(new SimpleStateMachine(this.progressionConfiguration, this.startState, this.endState));
+        Map<String, SimpleStatus> state = new HashMap<>();
+        state.put(startState.getId(), startState);
+        state.put(endState.getId(), endState);
+        progressionConfiguration.put(this.startState.getId(), new String[]{this.endState.getId()});
+        progressionConfiguration.put(this.endState.getId(), null);
+        task.setStatusStateMachine(new SimpleStatusStateMachine(this.progressionConfiguration, this.startState.getId(), this.endState.getId(), state));
     }
 
     @org.junit.jupiter.api.Test
@@ -82,7 +83,7 @@ class TaskInProgressTest {
         assertNotNull(tip);
         assertNotNull(tip.getCreationDateTime());
         assertNotNull(tip.getStatus());
-        assertEquals(tip.getStatus().getStatus(), this.task.getStatusStateMachine().startState());
+        assertEquals(tip.getStatus().getStatus().getId(), this.task.getStatusStateMachine().getStartState());
 
     }
 
@@ -118,7 +119,7 @@ class TaskInProgressTest {
         TaskInProgress tip = this.task.start();
         Status[] statuses = this.task.getStatusStateMachine().available(tip.getStatus().getStatus());
         tip = this.task.changeTo(tip,statuses[0]);
-        assertEquals(tip.getStatus().getStatus(), this.task.getStatusStateMachine().endState());
+        assertEquals(tip.getStatus().getStatus().getId(), this.task.getStatusStateMachine().getEndState());
 
     }
 

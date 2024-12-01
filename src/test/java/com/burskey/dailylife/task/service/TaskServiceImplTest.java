@@ -1,13 +1,19 @@
 package com.burskey.dailylife.task.service;
 
-import com.burskey.dailylife.party.service.PartyService;
 import com.burskey.dailylife.task.domain.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -29,13 +35,19 @@ class TaskServiceImplTest {
         task.setTitle("title");
         task.setCreationDate(new Date());
 
-        HashMap map = new HashMap<Status, Status[]>();
-        Status start = new SimpleStatus("start");
-        Status end = new SimpleStatus("finish");
-        map.put(start, new Status[]{end});
-        map.put(end, null);
+        Map<String, SimpleStatus> state = new HashMap<>();
+        SimpleStatus startState = new SimpleStatus("start");
+        state.put(startState.getId(), startState);
+        SimpleStatus endState = new SimpleStatus("finish");
+        state.put(endState.getId(), endState);
 
-        task.setStatusStateMachine(new SimpleStateMachine(map, start, end));
+        Map map = new HashMap<String, String[]>();
+
+
+
+        map.put(startState.getId(), new String[]{endState.getId()});
+        map.put(endState.getId(), null);
+        task.setStatusStateMachine(new SimpleStatusStateMachine(map, startState.getId(), endState.getId(),state));
 
 
     }
@@ -72,4 +84,33 @@ class TaskServiceImplTest {
     @Test
     void getStatusPoints() {
     }
+
+
+    @Test
+    void serialize() throws JsonProcessingException {
+        assertNotNull(this.task);
+        ObjectMapper mapper = new ObjectMapper();
+//        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+//        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+//        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        String json = mapper.writeValueAsString(this.task);
+        Assertions.assertNotEquals(json, "");
+
+
+    }
+
+    @Test
+    void deserialize() throws JsonProcessingException {
+        assertNotNull(this.task);
+        ObjectMapper mapper = new ObjectMapper();
+
+        String json = mapper.writeValueAsString(this.task);
+        Task aTask = mapper.readValue(json, Task.class);
+        assertNotNull(aTask);
+
+
+
+    }
+
+
 }

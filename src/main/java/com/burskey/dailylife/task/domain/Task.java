@@ -1,7 +1,18 @@
 package com.burskey.dailylife.task.domain;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import java.util.Date;
 
+
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = SimpleTask.class, name = "simple")
+})
 public interface Task {
 
     public String getId();
@@ -9,9 +20,9 @@ public interface Task {
     public String getTitle();
     public String getDescription();
     public Date getCreationDate();
-    public StatusStateMachine getStatusStateMachine();
+    public SimpleStatusStateMachine getStatusStateMachine();
 
     public TaskInProgress start();
     public TaskInProgress changeTo(TaskInProgress task, Status status);
-
+    public String getType();
 }
