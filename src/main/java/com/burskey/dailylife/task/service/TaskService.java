@@ -5,6 +5,7 @@ import com.burskey.dailylife.task.domain.*;
 public interface TaskService {
 
     public Task getTask(String partyId, String id);
+    public Task[] getTasksByParty(String partyId);
     public Task saveTask(Task task);
 
     public TaskInProgress save(TaskInProgress tip);

@@ -74,5 +74,8 @@ public class TaskServiceImpl implements TaskService {
         return this.getService().getStatusPoints(taskInProgressId);
     }
 
-
+    @Override
+    public Task[] getTasksByParty(String partyId) {
+        return this.getService().getTasksByParty(partyId);
+    }
 }
