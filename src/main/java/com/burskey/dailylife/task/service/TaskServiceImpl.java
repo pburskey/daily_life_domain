@@ -57,7 +57,7 @@ public class TaskServiceImpl implements TaskService {
 
 
     @Override
-    public TaskInProgress save(TaskInProgress tip) {
+    public TaskInProgress saveTaskInProgress(TaskInProgress tip) {
         {
             Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
             Set<ConstraintViolation<TaskInProgress>> violations = validator.validate(tip);
@@ -66,7 +66,7 @@ public class TaskServiceImpl implements TaskService {
             }
         }
 
-        return this.getService().save(tip);
+        return this.getService().saveTaskInProgress(tip);
     }
 
     @Override
@@ -77,5 +77,16 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task[] getTasksByParty(String partyId) {
         return this.getService().getTasksByParty(partyId);
+    }
+
+
+    @Override
+    public TaskInProgress[] getByTask(String partyId, String taskId) {
+        return this.getService().getByTask(partyId, taskId);
+    }
+
+    @Override
+    public TaskInProgress[] getByParty(String partyId) {
+        return this.getService().getByParty(partyId);
     }
 }

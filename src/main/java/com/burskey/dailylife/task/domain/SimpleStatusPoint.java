@@ -5,8 +5,10 @@ import java.util.Date;
 public class SimpleStatusPoint implements StatusPoint {
     private Status status;
     private Date dateTime;
+    private String type = "simple";
 
-
+    public SimpleStatusPoint() {
+    }
 
     public SimpleStatusPoint(Status status, Date dateTime) {
         this.status = status;
@@ -30,5 +32,14 @@ public class SimpleStatusPoint implements StatusPoint {
 
     public void setDateTime(Date dateTime) {
         this.dateTime = dateTime;
+    }
+
+    @Override
+    public String getType() {
+        return this.type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

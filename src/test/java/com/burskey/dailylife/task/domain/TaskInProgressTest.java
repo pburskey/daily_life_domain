@@ -1,6 +1,10 @@
 package com.burskey.dailylife.task.domain;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -123,6 +127,41 @@ class TaskInProgressTest {
 
     }
 
+
+
+
+    @Test
+    void serialize() throws JsonProcessingException {
+        assertNotNull(this.task.getStatusStateMachine());
+        TaskInProgress tip = this.task.start();
+        assertNotNull(tip);
+        ObjectMapper mapper = new ObjectMapper();
+//        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+//        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+//        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        String json = mapper.writeValueAsString(tip);
+        Assertions.assertNotEquals(json, "");
+
+
+    }
+
+    @Test
+    void deserialize() throws JsonProcessingException {
+        assertNotNull(this.task.getStatusStateMachine());
+        TaskInProgress tip = this.task.start();
+        assertNotNull(tip);
+        ObjectMapper mapper = new ObjectMapper();
+//        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+//        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+//        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        String json = mapper.writeValueAsString(tip);
+
+        TaskInProgress tip2 = mapper.readValue(json, TaskInProgress.class);
+        assertNotNull(tip2);
+
+
+
+    }
 
 
 

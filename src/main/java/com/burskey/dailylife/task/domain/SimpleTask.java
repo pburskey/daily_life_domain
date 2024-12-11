@@ -101,7 +101,7 @@ public class SimpleTask implements Task {
             Status[] available = this.getStatusStateMachine().available(task.getStatus().getStatus());
             if (available != null && available.length > 0){
                 if (Arrays.stream(available).anyMatch(aStatus -> aStatus.getId().equals(status.getId()))){
-                    tip = new SimpleTaskInProgress(task.getTipID(), task.getTaskID(), task.getCreationDateTime(), new SimpleStatusPoint(status, new Date()));
+                    tip = new SimpleTaskInProgress(task.getID(), task.getTaskID(), task.getCreationDateTime(), new SimpleStatusPoint(status, new Date()));
                 }
             }
         }
