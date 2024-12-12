@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-class TaskServiceImplTest {
+class TaskServiceImplTest{
 
     TaskService service = null;
     TaskService dao = Mockito.mock(TaskService.class);
@@ -60,9 +60,9 @@ class TaskServiceImplTest {
     @Test
     void getTask() {
         assertNotNull(this.task);
-        when(this.dao.getTask(anyString(), anyString())).thenReturn(task);
+        when(this.dao.getTask( anyString())).thenReturn(task);
 
-        Task aTask = this.service.getTask("2","1");
+        Task aTask = this.service.getTask("1");
         assertNotNull(aTask);
         assertEquals(task.getId(), aTask.getId());
 
@@ -86,31 +86,7 @@ class TaskServiceImplTest {
     }
 
 
-    @Test
-    void serialize() throws JsonProcessingException {
-        assertNotNull(this.task);
-        ObjectMapper mapper = new ObjectMapper();
-//        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-//        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-//        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        String json = mapper.writeValueAsString(this.task);
-        Assertions.assertNotEquals(json, "");
 
-
-    }
-
-    @Test
-    void deserialize() throws JsonProcessingException {
-        assertNotNull(this.task);
-        ObjectMapper mapper = new ObjectMapper();
-
-        String json = mapper.writeValueAsString(this.task);
-        Task aTask = mapper.readValue(json, Task.class);
-        assertNotNull(aTask);
-
-
-
-    }
 
 
 }

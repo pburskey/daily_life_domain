@@ -85,28 +85,9 @@ public class SimpleTask implements Task {
     public SimpleTask() {
     }
 
-    @Override
-    public TaskInProgress start() {
-        StatusPoint point = new SimpleStatusPoint(this.getStatusStateMachine().from(this.getStatusStateMachine().getStartState()), new Date());
-
-        TaskInProgress tip = new SimpleTaskInProgress(null, this.getId(), new Date(), point);
-        return tip;
-    }
 
 
-    @Override
-    public TaskInProgress changeTo(TaskInProgress task, Status status) {
-        TaskInProgress tip = null;
-        if (task != null && status != null){
-            Status[] available = this.getStatusStateMachine().available(task.getStatus().getStatus());
-            if (available != null && available.length > 0){
-                if (Arrays.stream(available).anyMatch(aStatus -> aStatus.getId().equals(status.getId()))){
-                    tip = new SimpleTaskInProgress(task.getID(), task.getTaskID(), task.getCreationDateTime(), new SimpleStatusPoint(status, new Date()));
-                }
-            }
-        }
-        return  tip;
-    }
+
 
     @Override
     public String getType() {

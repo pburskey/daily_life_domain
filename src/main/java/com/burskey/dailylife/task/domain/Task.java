@@ -22,7 +22,6 @@ public interface Task {
     public Date getCreationDate();
     public SimpleStatusStateMachine getStatusStateMachine();
 
-    public TaskInProgress start();
-    public TaskInProgress changeTo(TaskInProgress task, Status status);
+
     public String getType();
 }

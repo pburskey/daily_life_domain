@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import java.util.Date;
 
 
-
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
@@ -16,6 +15,8 @@ import java.util.Date;
 })
 public interface StatusPoint {
     Status getStatus();
+
+    String getId();
 
     Date getDateTime();
 

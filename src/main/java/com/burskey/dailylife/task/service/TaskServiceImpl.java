@@ -1,14 +1,13 @@
 package com.burskey.dailylife.task.service;
 
-import com.burskey.dailylife.task.domain.StatusPoint;
-import com.burskey.dailylife.task.domain.StatusStateMachine;
-import com.burskey.dailylife.task.domain.Task;
-import com.burskey.dailylife.task.domain.TaskInProgress;
+import com.burskey.dailylife.task.domain.*;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 
+import java.util.Arrays;
+import java.util.Date;
 import java.util.Set;
 
 public class TaskServiceImpl implements TaskService {
@@ -28,8 +27,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task getTask(String partyId, String id) {
-        return this.getService().getTask(partyId, id);
+    public Task getTask(  String id) {
+        return this.getService().getTask( id);
     }
 
     @Override
@@ -81,12 +80,55 @@ public class TaskServiceImpl implements TaskService {
 
 
     @Override
-    public TaskInProgress[] getByTask(String partyId, String taskId) {
-        return this.getService().getByTask(partyId, taskId);
+    public TaskInProgress[] getByTask( String taskId) {
+        return this.getService().getByTask( taskId);
     }
 
     @Override
     public TaskInProgress[] getByParty(String partyId) {
         return this.getService().getByParty(partyId);
+    }
+
+    @Override
+    public TaskInProgress changeTo(String taskInProgressID, String statusID) {
+        TaskInProgress tip = this.getTaskInProgress(taskInProgressID);
+        Task task = this.getTask(tip.getTaskID());
+        Status status = task.getStatusStateMachine().getState().get(statusID);
+        return this.changeTo(task, tip, status);
+    }
+
+
+    @Override
+    public TaskInProgress getTaskInProgress(String taskInProgressId) {
+        return this.getService().getTaskInProgress(taskInProgressId);
+    }
+
+    @Override
+    public TaskInProgress changeTo(Task task, TaskInProgress tip, Status status) {
+        TaskInProgress newTip = null;
+        if (task != null && status != null){
+            Status[] available = task.getStatusStateMachine().available(tip.getStatus().getStatus());
+            if (available != null && available.length > 0){
+                if (Arrays.stream(available).anyMatch(aStatus -> aStatus.getId().equals(status.getId()))){
+                    newTip = new SimpleTaskInProgress(tip.getID(), task.getId(), tip.getCreationDateTime(), new SimpleStatusPoint(status, new Date()));
+                    this.saveTaskInProgress(newTip);
+                }
+            }
+        }
+        return  newTip;
+    }
+
+    @Override
+    public TaskInProgress start(Task task) {
+        StatusPoint point = new SimpleStatusPoint(task.getStatusStateMachine().from(task.getStatusStateMachine().getStartState()), new Date());
+        TaskInProgress tip = new SimpleTaskInProgress(null, task.getId(), new Date(), point);
+        this.saveTaskInProgress(tip);
+        return tip;
+    }
+
+    @Override
+    public TaskInProgress start(String taskId) {
+        Task task = this.getTask( taskId);
+        return this.start(task);
     }
 }

@@ -6,6 +6,8 @@ public class SimpleStatusPoint implements StatusPoint {
     private Status status;
     private Date dateTime;
     private String type = "simple";
+    private String id;
+
 
     public SimpleStatusPoint() {
     }
@@ -13,6 +15,7 @@ public class SimpleStatusPoint implements StatusPoint {
     public SimpleStatusPoint(Status status, Date dateTime) {
         this.status = status;
         this.dateTime = dateTime;
+
     }
 
     @Override
@@ -41,5 +44,14 @@ public class SimpleStatusPoint implements StatusPoint {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
